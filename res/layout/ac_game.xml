@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.github.fo2rist.tictactoeunlimited"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:columnCount="3"
+    app:rowCount="2"
+    tools:context=".GameActivity" >
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_column="0"
+        app:layout_gravity="left|top"
+        app:layout_row="0"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_column="0"
+        app:layout_gravity="left|top"
+        app:layout_row="1"
+        android:text="Button" />
+
+</android.support.v7.widget.GridLayout>
