@@ -29,6 +29,16 @@
         android:layout_height="wrap_content"
         android:text="About"
         android:onClick="showAbout" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start server"
+        android:onClick="startBluetoothServer" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send message"
+        android:onClick="sendAnother" />
     
     <TextView
         android:id="@+id/out"

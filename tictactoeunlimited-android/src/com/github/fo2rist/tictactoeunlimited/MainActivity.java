@@ -3,7 +3,6 @@ package com.github.fo2rist.tictactoeunlimited;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Set;
-import java.util.UUID;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -60,6 +59,18 @@ public class MainActivity extends Activity {
 	    btAdapter = BluetoothAdapter.getDefaultAdapter();
 	    CheckBTState();
 	}
+	
+	public void startBluetoothServer(View sender) throws IOException {
+		new BtServerThread().start();
+//		btAdapter = BluetoothAdapter.getDefaultAdapter();
+//		BluetoothServerSocket receivingSocket = btAdapter.listenUsingRfcommWithServiceRecord("ME!", MY_UUID);
+//		BluetoothSocket socket = receivingSocket.accept();
+//		receivingSocket.close();
+	}
+	
+	public void sendAnother(View sender)  {
+		sendMessage();
+	}
 
 	public void showAbout(View sender) {
 		startActivity(new Intent(this, AboutActivity.class));
@@ -70,9 +81,6 @@ public class MainActivity extends Activity {
 	private BluetoothAdapter btAdapter = null;
 	private BluetoothSocket btSocket = null;
 	private OutputStream outStream = null;
-
-	// Well known SPP UUID
-	private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	  
 	private TextView out;
 	
@@ -127,7 +135,8 @@ public class MainActivity extends Activity {
 		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		    builder.setTitle("Make your selection");
 		    builder.setItems(btDevicesNames, new DialogInterface.OnClickListener() {
-		    	public void onClick(DialogInterface dialog, int item) {
+		    	@Override
+				public void onClick(DialogInterface dialog, int item) {
 		    		// Do something with the selection
 		    		connectToDevice(btDevicesAddresses[item]);
 		    	}
@@ -162,13 +171,13 @@ public class MainActivity extends Activity {
 			out.append("\n...Connection established and data link opened...");
 			sendMessage();
 		} catch (IOException e) {
-			try {
-				btSocket.close();
-			} catch (IOException e2) {
-				Toast.makeText(this,
-						"In onResume() and unable to close socket during connection failure" + e2.getMessage() + ".",
-						Toast.LENGTH_LONG);
-			}
+//			try {
+//				btSocket.close();
+//			} catch (IOException e2) {
+//				Toast.makeText(this,
+//						"In onResume() and unable to close socket during connection failure" + e2.getMessage() + ".",
+//						Toast.LENGTH_LONG);
+//			}
 		}
 	}
 
