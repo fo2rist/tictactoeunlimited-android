@@ -72,7 +72,7 @@ public class BtServer extends Thread {
 			inputStream.read(buffer);
 			outputStream.write(buffer);
 			
-			listener_.notifyAboutDataReceived(buffer.toString());
+			listener_.notifyAboutDataReceived(new String(buffer, "utf-8"));
 		}
 	}
 

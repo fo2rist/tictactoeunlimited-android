@@ -2,6 +2,7 @@ package com.github.fo2rist.tictactoeunlimited;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -118,7 +119,7 @@ public class BtClient {
 				listener_.notifyAboutErrorOccured("Output stream creation failed:" + e.getMessage() + ".");
 			}
 
-			byte[] msgBuffer = (data+"\n").getBytes();
+			byte[] msgBuffer = (data+"\n").getBytes(Charset.forName("utf-8"));
 			try {
 				outStream_.write(msgBuffer);
 			} catch (IOException e) {
