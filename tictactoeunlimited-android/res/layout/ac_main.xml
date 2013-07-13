@@ -20,25 +20,28 @@
         android:text="Hot seat"
         android:onClick="startGameHotSeat" />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BT"
-        android:onClick="startGameViaBluetooth" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="About"
-        android:onClick="showAbout" />
-    <Button
+        android:id="@+id/bt_server_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start server"
         android:onClick="startBluetoothServer" />
     <Button
+        android:id="@+id/bt_client_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start client"
+        android:onClick="startGameViaBluetooth" />
+    <Button
+        android:id="@+id/bt_send_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Send message"
         android:onClick="sendAnother" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About"
+        android:onClick="showAbout" />
     
     <TextView
         android:id="@+id/out"

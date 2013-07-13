@@ -1,15 +1,9 @@
 package com.github.fo2rist.tictactoeunlimited;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Set;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +11,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.fo2rist.tictactoeunlimited.BtUtils.BtEventsListener;
+import com.github.fo2rist.tictactoeunlimited.BtUtils.OnDeviceSelectesListener;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
 
 /**
@@ -24,11 +20,66 @@ import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
  * Game type chooser.
  */
 public class MainActivity extends Activity {
+	
+	private BluetoothAdapter btAdapter_ = null;
+	
+	private BtClient btClient_ = null;
+	private BtServer btServer_ = null;
+	
+	private final BtEventsListener btClientEventsListener_ = new BtEventsListener() {
+		@Override
+		public void onConnected() {
+			Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT).show();
+		};
+		@Override
+		public void onDisconnected() {
+			Toast.makeText(MainActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
+		};
+		@Override
+		public void onDataSent() {
+			
+		};
+		@Override
+		public void onErrorOccured(String errorMessage) {
+			Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+			btClient_.disconnect();
+			btClient_ = null;
+		};
+	};
+	
+	private final BtEventsListener btServerEventsListener_ = new BtEventsListener() {
+		@Override
+		public void onConnected() {
+			Toast.makeText(MainActivity.this, "Client connected", Toast.LENGTH_SHORT).show();
+		};
+		@Override
+		public void onDisconnected() {
+			Toast.makeText(MainActivity.this, "Client disconnected", Toast.LENGTH_SHORT).show();
+		};
+		@Override
+		public void onDataReceived(String data) {
+			out.append(data);
+		};
+		@Override
+		public void onErrorOccured(String errorMessage) {
+			Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+			btServer_.cancel();
+			btServer_ = null;
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ac_main);
+		
+		btAdapter_ = BluetoothAdapter.getDefaultAdapter();
+		if (btAdapter_ == null) {
+			//Disable button
+			findViewById(R.id.bt_server_button).setEnabled(false);
+			findViewById(R.id.bt_client_button).setEnabled(false);
+			findViewById(R.id.bt_send_button).setEnabled(false);
+		}
 		
 		/*DEBUG*/
 		out = (TextView) findViewById(R.id.out);
@@ -56,53 +107,22 @@ public class MainActivity extends Activity {
 	}
 
 	public void startGameViaBluetooth(View sender) {
-	    btAdapter = BluetoothAdapter.getDefaultAdapter();
-	    CheckBTState();
-	}
-	
-	public void startBluetoothServer(View sender) throws IOException {
-		new BtServerThread().start();
-//		btAdapter = BluetoothAdapter.getDefaultAdapter();
-//		BluetoothServerSocket receivingSocket = btAdapter.listenUsingRfcommWithServiceRecord("ME!", MY_UUID);
-//		BluetoothSocket socket = receivingSocket.accept();
-//		receivingSocket.close();
-	}
-	
-	public void sendAnother(View sender)  {
-		sendMessage();
-	}
-
-	public void showAbout(View sender) {
-		startActivity(new Intent(this, AboutActivity.class));
-	}
-	
-	//TRASH
-	private static final int REQUEST_ENABLE_BT = 1;
-	private BluetoothAdapter btAdapter = null;
-	private BluetoothSocket btSocket = null;
-	private OutputStream outStream = null;
-	  
-	private TextView out;
-	
-	private void CheckBTState() {
 		// Check for Bluetooth support and then check to make sure it is turned on
-
 		// Emulator doesn't support Bluetooth and will return null
-		if (btAdapter == null) {
+		if (btAdapter_ == null) {
 			Toast.makeText(this, "Bluetooth Not supported. Aborting.", Toast.LENGTH_LONG);
 			return;
+		}
+
+		if (btAdapter_.isEnabled()) {
+			selectDevice();
 		} else {
-			if (btAdapter.isEnabled()) {
-				out.append("\n...Bluetooth is enabled...");
-				selectDevice();
-			} else {
-				// Prompt user to turn on Bluetooth
-				Intent enableBtIntent = new Intent(btAdapter.ACTION_REQUEST_ENABLE);
-				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-			}
+			// Prompt user to turn on Bluetooth to select device when done
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -115,105 +135,37 @@ public class MainActivity extends Activity {
 			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
+	
+	public void startBluetoothServer(View sender) throws IOException {
+		if (btServer_ == null) {
+			btServer_ = new BtServer(btServerEventsListener_);
+			btServer_.start();
+		}
+	}
+	
+	public void sendAnother(View sender)  {
+		btClient_.send("Hello from Android");
+	}
+
+	public void showAbout(View sender) {
+		startActivity(new Intent(this, AboutActivity.class));
+	}
+	
+	//TRASH
+	private static final int REQUEST_ENABLE_BT = 1;
+		  
+	private TextView out;
+		
 
 	private void selectDevice() {
-		btAdapter.getBondedDevices();
-		
-		Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
-		// If there are paired devices
-		if (pairedDevices.size() > 0) {
-			String btDevicesNames[] = new String[pairedDevices.size()];
-			final String btDevicesAddresses[] = new String[pairedDevices.size()];
-		    // Loop through paired devices
-			int i=0;
-		    for (BluetoothDevice device : pairedDevices) {
-		        // Add the name and address to an array adapter to show in a ListView
-		        btDevicesNames[i] = device.getName();
-		        btDevicesAddresses[i] = device.getAddress();
-		        i++;
-		    }
-		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		    builder.setTitle("Make your selection");
-		    builder.setItems(btDevicesNames, new DialogInterface.OnClickListener() {
-		    	@Override
-				public void onClick(DialogInterface dialog, int item) {
-		    		// Do something with the selection
-		    		connectToDevice(btDevicesAddresses[item]);
-		    	}
-		    });
-		    AlertDialog alert = builder.create();
-		    alert.show();
-		}
-	}
-
-	private void connectToDevice(String address) {
-		
-		// Set up a pointer to the remote node using it's address.
-		BluetoothDevice device = btAdapter.getRemoteDevice(address);
-
-		// Two things are needed to make a connection:
-		// A MAC address, which we got above.
-		// A Service ID or UUID. In this case we are using the
-		// UUID for SPP.
-		try {
-			btSocket = device.createRfcommSocketToServiceRecord(MY_UUID);
-		} catch (IOException e) {
-			Toast.makeText(this, "In onResume() and socket create failed: " + e.getMessage() + ".", Toast.LENGTH_LONG);
-		}
-
-		// Discovery is resource intensive. Make sure it isn't going on
-		// when you attempt to connect and pass your message.
-		btAdapter.cancelDiscovery();
-
-		// Establish the connection. This will block until it connects.
-		try {
-			btSocket.connect();
-			out.append("\n...Connection established and data link opened...");
-			sendMessage();
-		} catch (IOException e) {
-//			try {
-//				btSocket.close();
-//			} catch (IOException e2) {
-//				Toast.makeText(this,
-//						"In onResume() and unable to close socket during connection failure" + e2.getMessage() + ".",
-//						Toast.LENGTH_LONG);
-//			}
-		}
-	}
-
-	private void sendMessage() {
-		// Create a data stream so we can talk to server.
-		out.append("\n...Sending message to server...");
-
-		try {
-			outStream = btSocket.getOutputStream();
-		} catch (IOException e) {
-			Toast.makeText(this,
-					"In onResume() and output stream creation failed:" + e.getMessage() + ".",
-					Toast.LENGTH_LONG);
-		}
-
-		String message = "Hello from Android.\n";
-		byte[] msgBuffer = message.getBytes();
-		try {
-			outStream.write(msgBuffer);
-		} catch (IOException e) {
-			String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
-			msg = msg + ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on server.\n\n";
-			Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-		}
-
-//				if (outStream != null) {
-//					try {
-//						outStream.flush();
-//					} catch (IOException e) {
-//						AlertBox("Fatal Error", "In onPause() and failed to flush output stream: " + e.getMessage() + ".");
-//					}
-//				}
-//				try {
-//					btSocket.close();
-//				} catch (IOException e2) {
-//					AlertBox("Fatal Error", "In onPause() and failed to close socket." + e2.getMessage() + ".");
-//				}
+		BtUtils.showDevicesSelector(this, btAdapter_, new OnDeviceSelectesListener() {
+			@Override
+			public void onDeviceSelected(String address, String name) {
+				if (btClient_ == null) {
+					btClient_ = new BtClient(MainActivity.this, btClientEventsListener_);
+				}
+				btClient_.startConnection(address);
+			}
+		});
 	}
 }
