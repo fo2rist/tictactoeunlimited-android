@@ -70,9 +70,9 @@ public class BtServer extends Thread {
 		while (true) {
 			final byte[] buffer = new byte[1024];
 			inputStream.read(buffer);
-			outputStream.write(buffer);
+			outputStream.write("UNDSTD".getBytes());
 			
-			listener_.notifyAboutDataReceived(new String(buffer, "utf-8"));
+			listener_.notifyAboutDataReceived(new String(buffer, BtUtils.UTF_8));
 		}
 	}
 

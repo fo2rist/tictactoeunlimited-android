@@ -1,19 +1,26 @@
 package com.github.fo2rist.tictactoeunlimited;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
 import com.github.fo2rist.tictactoeunlimited.BtUtils.BtEventsListener;
 
+/**
+ * Client connection.
+ * Launches thread for connection.
+ * Allows to reconnect after disconnect, but only one connection may be active at time.
+ * {@link #disconnect()} must be called explicitly to start next connections
+ */
 public class BtClient {
 	
 	private class ClientLooperThread extends Thread {
@@ -38,6 +45,7 @@ public class BtClient {
 			handler_.sendMessage(message);
 		}
 
+		@SuppressLint("HandlerLeak")//We clean pointer to handler
 		@Override
 		public void run() {
 			Looper.prepare();
@@ -67,6 +75,9 @@ public class BtClient {
 			handler_.sendEmptyMessage(MSG_CONNECT);
 			
 			Looper.loop();
+			
+			//When loop finished clean handler link
+			handler_ = null;
 		}
 		
 		private void performConnect() {
@@ -115,17 +126,18 @@ public class BtClient {
 			// Create a data stream so we can talk to server.
 			try {
 				outStream_ = btSocket_.getOutputStream();
+				inStream_ = btSocket_.getInputStream();
 			} catch (IOException e) {
 				listener_.notifyAboutErrorOccured("Output stream creation failed:" + e.getMessage() + ".");
 			}
 
-			byte[] msgBuffer = (data+"\n").getBytes(Charset.forName("utf-8"));
+			//Send data
+			byte[] msgBuffer = data.getBytes(Charset.forName(BtUtils.UTF_8));
 			try {
 				outStream_.write(msgBuffer);
 			} catch (IOException e) {
 				listener_.notifyAboutErrorOccured("Exception occurred during write: " + e.getMessage());
 			}
-
 			if (outStream_ != null) {
 				try {
 					outStream_.flush();
@@ -134,10 +146,18 @@ public class BtClient {
 					listener_.notifyAboutErrorOccured("failed to flush output stream: " + e.getMessage() + ".");
 				}
 			}
+			
+			//Read response
+			final byte[] buffer = new byte[1024];
+			try {
+				inStream_.read(buffer);
+				listener_.notifyAboutDataReceived(new String(buffer, BtUtils.UTF_8));
+			} catch (IOException e) {
+				listener_.notifyAboutErrorOccured("Exception occurred during read: " + e.getMessage());
+			}
 		}
 	}
 	
-	private final Context context_;
 	private final BtEventsListener listener_;
 	
 	private ClientLooperThread connectionThread_ = null;
@@ -145,9 +165,9 @@ public class BtClient {
 	private BluetoothAdapter btAdapter_ = null;
 	private BluetoothSocket btSocket_ = null;
 	private OutputStream outStream_ = null;
+	private InputStream inStream_ = null;
 	
-	public BtClient(Context context, BtEventsListener listener) throws IllegalStateException {
-		context_ = context;
+	public BtClient(BtEventsListener listener) throws IllegalStateException {
 		listener_ = listener;
 		
 		btAdapter_ = BluetoothAdapter.getDefaultAdapter();
@@ -155,6 +175,7 @@ public class BtClient {
 			throw new IllegalStateException("No bt adapter present");
 		}
 	}
+	
 	
 	public void startConnection(String address) {
 		if (connectionThread_ == null) {
@@ -165,6 +186,7 @@ public class BtClient {
 	
 	public void disconnect() {
 		connectionThread_.disconnect();
+		connectionThread_ = null;
 	}
 	
 	public void send(String message) {

@@ -13,40 +13,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Vs CPU"
-        android:onClick="startGameVsCpu" />
+        android:onClick="onStartGameVsCpuClicked" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hot seat"
-        android:onClick="startGameHotSeat" />
+        android:onClick="onStartGameHotSeatClicked" />
     <Button
         android:id="@+id/bt_server_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start server"
-        android:onClick="startBluetoothServer" />
+        android:onClick="onStartBluetoothServerClicked" />
     <Button
         android:id="@+id/bt_client_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start client"
-        android:onClick="startGameViaBluetooth" />
+        android:onClick="onStartGameViaBluetoothClicked" />
     <Button
         android:id="@+id/bt_send_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Send message"
-        android:onClick="sendAnother" />
+        android:onClick="onSendAnotherClicked" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="About"
-        android:onClick="showAbout" />
+        android:onClick="onShowAboutClicked" />
     
     <TextView
         android:id="@+id/out"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        />
-
+        android:layout_height="fill_parent" />
 </LinearLayout>

@@ -1,12 +1,9 @@
 package com.github.fo2rist.tictactoeunlimited;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +17,17 @@ import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
  * Game type chooser.
  */
 public class MainActivity extends Activity {
+	private enum GameMode {
+		Server,
+		Client
+	}
+	
+	private static final int REQUEST_ENABLE_BT_FOR_CLIENT = 1;
+	private static final int REQUEST_ENABLE_BT_FOR_SERVER = 2;
+	
+	//Controls
+	//Trash
+	private TextView out;
 	
 	private BluetoothAdapter btAdapter_ = null;
 	
@@ -31,19 +39,29 @@ public class MainActivity extends Activity {
 		public void onConnected() {
 			Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT).show();
 		};
+		
 		@Override
 		public void onDisconnected() {
 			Toast.makeText(MainActivity.this, "Disconnected", Toast.LENGTH_SHORT).show();
 		};
+		
 		@Override
 		public void onDataSent() {
 			
 		};
+		
+		@Override
+		public void onDataReceived(String data) {
+			out.append(" > Got: " + data);
+		};
+		
 		@Override
 		public void onErrorOccured(String errorMessage) {
 			Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-			btClient_.disconnect();
-			btClient_ = null;
+			if (btClient_ != null) {
+				btClient_.disconnect();
+				btClient_ = null;
+			}
 		};
 	};
 	
@@ -52,19 +70,24 @@ public class MainActivity extends Activity {
 		public void onConnected() {
 			Toast.makeText(MainActivity.this, "Client connected", Toast.LENGTH_SHORT).show();
 		};
+		
 		@Override
 		public void onDisconnected() {
 			Toast.makeText(MainActivity.this, "Client disconnected", Toast.LENGTH_SHORT).show();
 		};
+		
 		@Override
 		public void onDataReceived(String data) {
 			out.append(data);
 		};
+		
 		@Override
 		public void onErrorOccured(String errorMessage) {
 			Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-			btServer_.cancel();
-			btServer_ = null;
+			if (btServer_ != null) {
+				btServer_.cancel();
+				btServer_ = null;
+			}
 		};
 	};
 
@@ -84,29 +107,56 @@ public class MainActivity extends Activity {
 		/*DEBUG*/
 		out = (TextView) findViewById(R.id.out);
 	}
-
+	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case REQUEST_ENABLE_BT_FOR_CLIENT:
+			if (resultCode == RESULT_OK) {
+				selectDeviceToConnect();
+			}
+			break;
+		case REQUEST_ENABLE_BT_FOR_SERVER:
+			if (resultCode == RESULT_OK) {
+				startBluetoothServer();
+			}
+			break;
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
-	public void startGameVsCpu(View sender) {
+	public void onStartGameVsCpuClicked(View sender) {
 		GameLogic.getInstance().initializeGame(8, 10);
 		
 		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		startActivity(new Intent(this, GameActivity.class));
 	}
 
-	public void startGameHotSeat(View sender) {
+	public void onStartGameHotSeatClicked(View sender) {
 		GameLogic.getInstance().initializeGame(10, 10);
 		
 		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		startActivity(new Intent(this, GameActivity.class));
 	}
+	
+	public void onStartBluetoothServerClicked(View sender) {
+		checkBtAndStartGame(GameMode.Server);
+	}
 
-	public void startGameViaBluetooth(View sender) {
+	public void onStartGameViaBluetoothClicked(View sender) {
+		checkBtAndStartGame(GameMode.Client);
+	}
+	
+	public void onSendAnotherClicked(View sender)  {
+		btClient_.send("Hello from Android");
+	}
+
+	public void onShowAboutClicked(View sender) {
+		startActivity(new Intent(this, AboutActivity.class));
+	}
+
+	private void checkBtAndStartGame(GameMode mode) {
 		// Check for Bluetooth support and then check to make sure it is turned on
 		// Emulator doesn't support Bluetooth and will return null
 		if (btAdapter_ == null) {
@@ -115,54 +165,42 @@ public class MainActivity extends Activity {
 		}
 
 		if (btAdapter_.isEnabled()) {
-			selectDevice();
+			switch (mode) {
+			case Server:				
+				selectDeviceToConnect();
+				break;
+			case Client:
+				startBluetoothServer();
+				break;
+			}
 		} else {
 			// Prompt user to turn on Bluetooth to select device when done
 			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case REQUEST_ENABLE_BT:
-			if (resultCode == RESULT_OK) {
-				selectDevice();
+			
+			switch (mode) {
+			case Server:				
+				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT_FOR_SERVER);
+				break;
+			case Client:
+				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT_FOR_CLIENT);
+				break;
 			}
-			break;
-		default:
-			super.onActivityResult(requestCode, resultCode, data);
 		}
-	}
-	
-	public void startBluetoothServer(View sender) throws IOException {
+	} 
+		
+	private void startBluetoothServer() {
 		if (btServer_ == null) {
 			btServer_ = new BtServer(btServerEventsListener_);
 			btServer_.start();
 		}
 	}
 	
-	public void sendAnother(View sender)  {
-		btClient_.send("Hello from Android");
-	}
-
-	public void showAbout(View sender) {
-		startActivity(new Intent(this, AboutActivity.class));
-	}
-	
-	//TRASH
-	private static final int REQUEST_ENABLE_BT = 1;
-		  
-	private TextView out;
-		
-
-	private void selectDevice() {
+	private void selectDeviceToConnect() {
 		BtUtils.showDevicesSelector(this, btAdapter_, new OnDeviceSelectesListener() {
 			@Override
 			public void onDeviceSelected(String address, String name) {
 				if (btClient_ == null) {
-					btClient_ = new BtClient(MainActivity.this, btClientEventsListener_);
+					btClient_ = new BtClient(btClientEventsListener_);
 				}
 				btClient_.startConnection(address);
 			}

@@ -12,6 +12,9 @@ import android.os.Handler;
 import android.os.Message;
 
 public final class BtUtils {
+	/** Default transmission encoding */
+	public static final String UTF_8 = "utf-8";
+	
 	public interface OnDeviceSelectesListener {
 		public void onDeviceSelected(String address, String name);
 	}
