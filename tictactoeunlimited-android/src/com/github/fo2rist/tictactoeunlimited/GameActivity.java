@@ -92,10 +92,10 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 		ImageButton.setEnabled(false);
 		switch (state) {
 		case CellStateX:
-			ImageButton.setImageResource(R.drawable.cell_x);
+			ImageButton.setImageResource(R.drawable.game_x);
 			break;
 		case CellStateO:
-			ImageButton.setImageResource(R.drawable.cell_o);
+			ImageButton.setImageResource(R.drawable.game_o);
 			break;
 		default:
 			break;

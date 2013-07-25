@@ -1,12 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.github.fo2rist.tictactoeunlimited"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:layout_gravity="center"
-    tools:context=".GameActivity"
-    android:id="@+id/game_grid" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main_tiled"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".GameActivity" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/pic_x" />
+
+        <ImageView
+            android:id="@+id/score_x"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/numder_game_0" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/numder_game_dash" />
+
+        <ImageView
+            android:id="@+id/score_o"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/numder_game_0" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/pic_o" />
+    </LinearLayout>
     
-</android.support.v7.widget.GridLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF" >
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/game_grid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:minHeight="100dp"
+            android:minWidth="100dp" >
+        </android.support.v7.widget.GridLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_alignBottom="@+id/game_grid"
+            android:layout_alignLeft="@+id/game_grid"
+            android:layout_alignRight="@+id/game_grid"
+            android:layout_alignTop="@+id/game_grid"
+            android:background="@drawable/bg_hole" />
+
+    </RelativeLayout>
+
+</LinearLayout>

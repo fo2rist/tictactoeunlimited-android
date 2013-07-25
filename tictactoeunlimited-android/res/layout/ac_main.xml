@@ -2,49 +2,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/bg_main_tiled"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <Button
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vs CPU"
-        android:onClick="onStartGameVsCpuClicked" />
-    <Button
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/logo" />
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hot seat"
-        android:onClick="onStartGameHotSeatClicked" />
-    <Button
-        android:id="@+id/bt_server_button"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_game"
+            android:onClick="onStartGameVsCpuClicked"
+            android:text="Vs CPU" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_game"
+            android:onClick="onStartGameHotSeatClicked"
+            android:text="Hot seat" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start server"
-        android:onClick="onStartBluetoothServerClicked" />
-    <Button
-        android:id="@+id/bt_client_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start client"
-        android:onClick="onStartGameViaBluetoothClicked" />
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/bt_server_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_create"
+            android:onClick="onStartBluetoothServerClicked" />
+
+        <Button
+            android:id="@+id/bt_client_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_join"
+            android:onClick="onStartGameViaBluetoothClicked" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/bt_send_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Send message"
-        android:onClick="onSendAnotherClicked" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="About"
-        android:onClick="onShowAboutClicked" />
-    
+        android:onClick="onSendAnotherClicked"
+        android:text="Send message" />
+
+
+    <!-- Divider -->
     <TextView
         android:id="@+id/out"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+<!--     <View -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="0dp" -->
+<!--         android:layout_weight="1" /> -->
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="@drawable/bg_btn_info"
+        android:onClick="onShowAboutClicked" />
+
 </LinearLayout>
