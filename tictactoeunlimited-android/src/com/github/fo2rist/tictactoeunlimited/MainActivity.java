@@ -1,22 +1,28 @@
 package com.github.fo2rist.tictactoeunlimited;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.fo2rist.tictactoeunlimited.BtUtils.BtEventsListener;
-import com.github.fo2rist.tictactoeunlimited.BtUtils.OnDeviceSelectesListener;
+import com.github.fo2rist.tictactoeunlimited.bluetooth.BtClient;
+import com.github.fo2rist.tictactoeunlimited.bluetooth.BtServer;
+import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils;
+import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils.BtEventsListener;
+import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils.OnDeviceSelectesListener;
+import com.github.fo2rist.tictactoeunlimited.controls.MapSizesAdapter;
+import com.github.fo2rist.tictactoeunlimited.controls.ModesAdapter;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
 
 /**
  * Main screen.
  * Game type chooser.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 	private enum GameMode {
 		Server,
 		Client
@@ -26,6 +32,8 @@ public class MainActivity extends Activity {
 	private static final int REQUEST_ENABLE_BT_FOR_SERVER = 2;
 	
 	//Controls
+	ViewPager modeSelector;
+	ViewPager mapSizeSelector;
 	//Trash
 	private TextView out;
 	
@@ -95,6 +103,11 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ac_main);
+		
+		modeSelector = (ViewPager) findViewById(R.id.mode_selector);
+		modeSelector.setAdapter(new ModesAdapter(getSupportFragmentManager()));
+		mapSizeSelector = (ViewPager) findViewById(R.id.map_size_selector);
+		mapSizeSelector.setAdapter(new MapSizesAdapter(getSupportFragmentManager()));
 		
 		btAdapter_ = BluetoothAdapter.getDefaultAdapter();
 		if (btAdapter_ == null) {
@@ -205,5 +218,9 @@ public class MainActivity extends Activity {
 				btClient_.startConnection(address);
 			}
 		});
+	}
+	
+	public void testOnScrollClick(View sender) {
+		modeSelector.setCurrentItem(0);
 	}
 }

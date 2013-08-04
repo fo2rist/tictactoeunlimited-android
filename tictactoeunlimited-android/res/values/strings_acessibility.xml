@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game_vs_cpu">Game vs CPU</string>
+    <string name="game_vs_friend">Game vs Friend</string>
+    <string name="game_via_bt">Game via Bluetooth</string>
+    <string name="game_via_net">Game via Network</string>
+</resources>

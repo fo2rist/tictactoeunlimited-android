@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited;
+package com.github.fo2rist.tictactoeunlimited.bluetooth;
 
 import java.util.Set;
 import java.util.UUID;
@@ -82,7 +82,7 @@ public final class BtUtils {
 	// Well known SPP UUID
 	static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	
-	static final void showDevicesSelector(Context context, BluetoothAdapter btAdapter, final OnDeviceSelectesListener listener) {
+	public static final void showDevicesSelector(Context context, BluetoothAdapter btAdapter, final OnDeviceSelectesListener listener) {
 		btAdapter.getBondedDevices();
 		
 		Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
