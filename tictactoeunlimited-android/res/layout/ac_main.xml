@@ -80,20 +80,18 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical" >
-
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <android.support.v4.view.ViewPager
+                    android:layout_height="88dp" >
+                    <com.github.fo2rist.tictactoeunlimited.controls.HorizontalFlipperWidget
                         android:id="@+id/mode_selector"
                         android:layout_width="match_parent"
-                        android:layout_height="88dp"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="22dp"
                         android:layout_marginRight="22dp"
                         android:background="@drawable/bg_block_mode" />
-
                     <ImageButton
+                        android:id="@+id/button_mode_left"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_alignParentLeft="true"
@@ -101,10 +99,9 @@
                         android:background="@null"
                         android:contentDescription="@null"
                         android:paddingTop="8dp"
-                        android:onClick="testOnScrollClick"
                         android:src="@drawable/bg_btn_block_left" />
-
                     <ImageButton
+                        android:id="@+id/button_mode_right"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_alignParentRight="true"
@@ -114,14 +111,38 @@
                         android:paddingTop="8dp"
                         android:src="@drawable/bg_btn_block_right" />
                 </RelativeLayout>
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/map_size_selector"
+                
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="88dp"
-                    android:layout_marginLeft="22dp"
-                    android:layout_marginRight="22dp"
-                    android:background="@drawable/bg_block_map" />
+                    android:layout_height="88dp" >
+                    <com.github.fo2rist.tictactoeunlimited.controls.HorizontalFlipperWidget
+                        android:id="@+id/map_size_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="22dp"
+                        android:background="@drawable/bg_block_map" />
+                    <ImageButton
+                        android:id="@+id/button_map_left"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:background="@null"
+                        android:contentDescription="@null"
+                        android:paddingTop="8dp"
+                        android:src="@drawable/bg_btn_block_left" />
+                    <ImageButton
+                        android:id="@+id/button_map_right"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@null"
+                        android:contentDescription="@null"
+                        android:paddingTop="8dp"
+                        android:src="@drawable/bg_btn_block_right" />
+                </RelativeLayout>
             </LinearLayout>
 
             <View

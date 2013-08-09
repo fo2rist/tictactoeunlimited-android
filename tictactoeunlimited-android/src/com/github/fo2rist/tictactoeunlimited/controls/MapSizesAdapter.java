@@ -25,7 +25,7 @@ public class MapSizesAdapter extends FragmentPagerAdapter {
 		CHAR_DRAWABLE_MAP.put('x', R.drawable.numder_x);	
 	}
 	
-	private static String[] buttons = {
+	private String[] buttons_ = {
 		"6x6",
 		"8x8",
 		"8x10",
@@ -38,11 +38,11 @@ public class MapSizesAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		return ImageTextFragment.newInstance(CHAR_DRAWABLE_MAP, buttons[position]);
+		return ImageTextFragment.newInstance(CHAR_DRAWABLE_MAP, buttons_[position]);
 	}
 
 	@Override
 	public int getCount() {
-		return buttons.length;
+		return buttons_.length;
 	}
 }

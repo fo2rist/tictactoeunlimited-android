@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +13,7 @@ import com.github.fo2rist.tictactoeunlimited.bluetooth.BtServer;
 import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils;
 import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils.BtEventsListener;
 import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils.OnDeviceSelectesListener;
+import com.github.fo2rist.tictactoeunlimited.controls.HorizontalFlipperWidget;
 import com.github.fo2rist.tictactoeunlimited.controls.MapSizesAdapter;
 import com.github.fo2rist.tictactoeunlimited.controls.ModesAdapter;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
@@ -32,8 +32,8 @@ public class MainActivity extends FragmentActivity {
 	private static final int REQUEST_ENABLE_BT_FOR_SERVER = 2;
 	
 	//Controls
-	ViewPager modeSelector;
-	ViewPager mapSizeSelector;
+	HorizontalFlipperWidget modeSelector;
+	HorizontalFlipperWidget mapSizeSelector;
 	//Trash
 	private TextView out;
 	
@@ -104,10 +104,14 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ac_main);
 		
-		modeSelector = (ViewPager) findViewById(R.id.mode_selector);
+		modeSelector = (HorizontalFlipperWidget) findViewById(R.id.mode_selector);
 		modeSelector.setAdapter(new ModesAdapter(getSupportFragmentManager()));
-		mapSizeSelector = (ViewPager) findViewById(R.id.map_size_selector);
+		modeSelector.setButtons(findViewById(R.id.button_mode_left),
+				findViewById(R.id.button_mode_right));
+		mapSizeSelector = (HorizontalFlipperWidget) findViewById(R.id.map_size_selector);
 		mapSizeSelector.setAdapter(new MapSizesAdapter(getSupportFragmentManager()));
+		mapSizeSelector.setButtons(findViewById(R.id.button_map_left),
+				findViewById(R.id.button_map_right));
 		
 		btAdapter_ = BluetoothAdapter.getDefaultAdapter();
 		if (btAdapter_ == null) {
@@ -218,9 +222,5 @@ public class MainActivity extends FragmentActivity {
 				btClient_.startConnection(address);
 			}
 		});
-	}
-	
-	public void testOnScrollClick(View sender) {
-		modeSelector.setCurrentItem(0);
 	}
 }

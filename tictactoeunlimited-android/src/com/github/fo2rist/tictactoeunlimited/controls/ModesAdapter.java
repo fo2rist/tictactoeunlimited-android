@@ -8,7 +8,7 @@ import com.github.fo2rist.tictactoeunlimited.R;
 
 public class ModesAdapter extends FragmentPagerAdapter {
 
-	private static int[] buttons = {
+	private int[] buttons_ = {
 		R.layout.btn_vs_cpu,
 		R.layout.btn_vs_friend,
 		R.layout.btn_via_bt
@@ -21,11 +21,11 @@ public class ModesAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		return ButtonFragment.newInstance(buttons[position]);
+		return ButtonFragment.newInstance(buttons_[position]);
 	}
 
 	@Override
 	public int getCount() {
-		return buttons.length;
+		return buttons_.length;
 	}
 }
