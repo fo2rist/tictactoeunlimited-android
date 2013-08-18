@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,9 +14,11 @@ import com.github.fo2rist.tictactoeunlimited.bluetooth.BtServer;
 import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils;
 import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils.BtEventsListener;
 import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils.OnDeviceSelectesListener;
-import com.github.fo2rist.tictactoeunlimited.controls.HorizontalFlipperWidget;
+import com.github.fo2rist.tictactoeunlimited.controls.HorizontalPagerWidget;
+import com.github.fo2rist.tictactoeunlimited.controls.HorizontalPagerWidget.OnPageSelectedListener;
 import com.github.fo2rist.tictactoeunlimited.controls.MapSizesAdapter;
 import com.github.fo2rist.tictactoeunlimited.controls.ModesAdapter;
+import com.github.fo2rist.tictactoeunlimited.controls.ModesAdapter.GameMode;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
 
 /**
@@ -23,7 +26,8 @@ import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
  * Game type chooser.
  */
 public class MainActivity extends FragmentActivity {
-	private enum GameMode {
+	
+	private enum BluetoothMode {
 		Server,
 		Client
 	}
@@ -32,10 +36,17 @@ public class MainActivity extends FragmentActivity {
 	private static final int REQUEST_ENABLE_BT_FOR_SERVER = 2;
 	
 	//Controls
-	HorizontalFlipperWidget modeSelector;
-	HorizontalFlipperWidget mapSizeSelector;
+	HorizontalPagerWidget modeSelector;
+	HorizontalPagerWidget mapSizeSelector;
+	View mapSizeSelectorBlock;
+	ImageButton buttonLocalGame;
+	ImageButton buttonCreateGame;
+	ImageButton buttonJoinGame;
 	//Trash
 	private TextView out;
+	
+	private ModesAdapter modesAdapter_;
+	private MapSizesAdapter mapSizesAdapter_;
 	
 	private BluetoothAdapter btAdapter_ = null;
 	
@@ -103,26 +114,53 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ac_main);
+
+		//Initialize game modes
+		modesAdapter_ = new ModesAdapter(getSupportFragmentManager());
+		mapSizesAdapter_ = new MapSizesAdapter(getSupportFragmentManager());
+		btAdapter_ = BluetoothAdapter.getDefaultAdapter();
+		if (btAdapter_ == null) {
+			//Disable modes/buttons if necessary
+			modesAdapter_.disableMode(GameMode.ViaBluetooth);
+			findViewById(R.id.bt_send_button).setEnabled(false);
+		}
+		modesAdapter_.disableMode(GameMode.ViaBluetooth);
+		modesAdapter_.disableMode(GameMode.ViaNetwork);
 		
-		modeSelector = (HorizontalFlipperWidget) findViewById(R.id.mode_selector);
-		modeSelector.setAdapter(new ModesAdapter(getSupportFragmentManager()));
+		//Setup ui
+		buttonLocalGame = (ImageButton) findViewById(R.id.button_local_game);
+		buttonCreateGame = (ImageButton) findViewById(R.id.button_create_game);
+		buttonJoinGame = (ImageButton) findViewById(R.id.button_join_game);
+		
+		modeSelector = (HorizontalPagerWidget) findViewById(R.id.mode_selector);
+		modeSelector.setAdapter(modesAdapter_);
 		modeSelector.setButtons(findViewById(R.id.button_mode_left),
 				findViewById(R.id.button_mode_right));
-		mapSizeSelector = (HorizontalFlipperWidget) findViewById(R.id.map_size_selector);
-		mapSizeSelector.setAdapter(new MapSizesAdapter(getSupportFragmentManager()));
+		
+		mapSizeSelectorBlock = findViewById(R.id.map_size_selector_block);
+		mapSizeSelector = (HorizontalPagerWidget) findViewById(R.id.map_size_selector);
+		mapSizeSelector.setAdapter(mapSizesAdapter_);
 		mapSizeSelector.setButtons(findViewById(R.id.button_map_left),
 				findViewById(R.id.button_map_right));
 		
-		btAdapter_ = BluetoothAdapter.getDefaultAdapter();
-		if (btAdapter_ == null) {
-			//Disable button
-			findViewById(R.id.bt_server_button).setEnabled(false);
-			findViewById(R.id.bt_client_button).setEnabled(false);
-			findViewById(R.id.bt_send_button).setEnabled(false);
-		}
+		//Setup listeners for selectors
+		modeSelector.setOnPageSelectedListener(new OnPageSelectedListener() {
+			@Override
+			public void onPageSelected(int position) {
+				setupMode(modesAdapter_.getMode(position));
+			}
+		});
+		
+		//Setup default mode
+		setupMode(modesAdapter_.getMode(modeSelector.getCurrentItem()));
 		
 		/*DEBUG*/
 		out = (TextView) findViewById(R.id.out);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 	}
 	
 	@Override
@@ -143,26 +181,27 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
-	public void onStartGameVsCpuClicked(View sender) {
-		GameLogic.getInstance().initializeGame(8, 10);
+	public void onStartLocalGameClicked(View sender) {
+		GameMode gameMode = modesAdapter_.getMode(modeSelector.getCurrentItem());
+		int[] mapSize = mapSizesAdapter_.getMapSize(mapSizeSelector.getCurrentItem());
 		
-		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-		startActivity(new Intent(this, GameActivity.class));
-	}
-
-	public void onStartGameHotSeatClicked(View sender) {
-		GameLogic.getInstance().initializeGame(10, 10);
+		GameLogic.getInstance().initializeGame(mapSize[0], mapSize[1]);
+		//TODO setup mode
 		
 		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		startActivity(new Intent(this, GameActivity.class));
 	}
 	
-	public void onStartBluetoothServerClicked(View sender) {
-		checkBtAndStartGame(GameMode.Server);
+	public void onCreateGameClicked(View sender) {
+		GameMode gameMode = modesAdapter_.getMode(modeSelector.getCurrentItem());
+		//TODO use mode
+		checkBtAndStartGame(BluetoothMode.Server);
 	}
 
-	public void onStartGameViaBluetoothClicked(View sender) {
-		checkBtAndStartGame(GameMode.Client);
+	public void onJoinGameClicked(View sender) {
+		GameMode gameMode = modesAdapter_.getMode(modeSelector.getCurrentItem());
+		//TODO use mode
+		checkBtAndStartGame(BluetoothMode.Client);
 	}
 	
 	public void onSendAnotherClicked(View sender)  {
@@ -173,7 +212,29 @@ public class MainActivity extends FragmentActivity {
 		startActivity(new Intent(this, AboutActivity.class));
 	}
 
-	private void checkBtAndStartGame(GameMode mode) {
+	private void setupMode(GameMode gameMode) {
+		switch (gameMode) {
+		case VsCpu:
+		case VsFriend:
+			buttonLocalGame.setVisibility(View.VISIBLE);
+			buttonCreateGame.setVisibility(View.GONE);
+			buttonJoinGame.setVisibility(View.GONE);
+			mapSizeSelectorBlock.setVisibility(View.VISIBLE);
+			break;
+		case ViaBluetooth:
+		case ViaNetwork:
+			buttonLocalGame.setVisibility(View.GONE);
+			buttonCreateGame.setVisibility(View.VISIBLE);
+			buttonJoinGame.setVisibility(View.VISIBLE);
+			mapSizeSelectorBlock.setVisibility(View.GONE);
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
+		
+	}
+	
+	private void checkBtAndStartGame(BluetoothMode mode) {
 		// Check for Bluetooth support and then check to make sure it is turned on
 		// Emulator doesn't support Bluetooth and will return null
 		if (btAdapter_ == null) {
@@ -184,10 +245,10 @@ public class MainActivity extends FragmentActivity {
 		if (btAdapter_.isEnabled()) {
 			switch (mode) {
 			case Server:				
-				selectDeviceToConnect();
+				startBluetoothServer();
 				break;
 			case Client:
-				startBluetoothServer();
+				selectDeviceToConnect();
 				break;
 			}
 		} else {

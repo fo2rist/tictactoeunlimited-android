@@ -9,9 +9,13 @@ import android.view.View;
 /**
  * Extended view Pager, that allows adding buttons to "swipe" left/right.  
  */
-public class HorizontalFlipperWidget extends ViewPager {
+public class HorizontalPagerWidget extends ViewPager {
 
-	public HorizontalFlipperWidget(Context context, AttributeSet attrs) {
+	public interface OnPageSelectedListener {
+		public void onPageSelected(int position);
+	}
+	
+	public HorizontalPagerWidget(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 	
@@ -41,6 +45,26 @@ public class HorizontalFlipperWidget extends ViewPager {
 				if (current < adapter.getCount()-1) {
 					setCurrentItem(current + 1);
 				}
+			}
+		});
+	}
+	
+	/**
+	 * Set listener to be notified about page change.
+	 */
+	public void setOnPageSelectedListener(final OnPageSelectedListener listener) {
+		this.setOnPageChangeListener(new OnPageChangeListener() {
+			@Override
+			public void onPageSelected(int arg0) {
+				listener.onPageSelected(arg0);
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
 			}
 		});
 	}

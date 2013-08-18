@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -25,36 +26,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:contentDescription="@null"
             android:src="@drawable/logo" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_btn_game"
-                android:onClick="onStartGameHotSeatClicked"
-                android:text="Hot seat" />
-
-            <Button
-                android:id="@+id/bt_server_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_btn_create"
-                android:onClick="onStartBluetoothServerClicked" />
-
-            <Button
-                android:id="@+id/bt_client_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_btn_join"
-                android:onClick="onStartGameViaBluetoothClicked" />
-        </LinearLayout>
 
         <Button
             android:id="@+id/bt_send_button"
@@ -83,13 +56,14 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="88dp" >
-                    <com.github.fo2rist.tictactoeunlimited.controls.HorizontalFlipperWidget
+                    <com.github.fo2rist.tictactoeunlimited.controls.HorizontalPagerWidget
                         android:id="@+id/mode_selector"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="22dp"
                         android:layout_marginRight="22dp"
-                        android:background="@drawable/bg_block_mode" />
+                        android:background="@drawable/bg_block_mode"
+                        android:requiresFadingEdge="none" />
                     <ImageButton
                         android:id="@+id/button_mode_left"
                         android:layout_width="48dp"
@@ -113,9 +87,11 @@
                 </RelativeLayout>
                 
                 <RelativeLayout
+                    android:id="@+id/map_size_selector_block"
                     android:layout_width="match_parent"
-                    android:layout_height="88dp" >
-                    <com.github.fo2rist.tictactoeunlimited.controls.HorizontalFlipperWidget
+                    android:layout_height="88dp"
+                    android:layout_marginTop="@dimen/activity_vertical_margin" >
+                    <com.github.fo2rist.tictactoeunlimited.controls.HorizontalPagerWidget
                         android:id="@+id/map_size_selector"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -150,13 +126,37 @@
                 android:layout_height="1dp"
                 android:layout_weight="8" />
         </LinearLayout>
-        <ImageButton
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:contentDescription="@null"
-            android:src="@drawable/bg_btn_game"
-            android:onClick="onStartGameVsCpuClicked" />
+            android:layout_marginBottom="@dimen/activity_vertical_margin" >
+            <ImageButton
+                android:id="@+id/button_local_game"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:src="@drawable/bg_btn_game"
+                android:onClick="onStartLocalGameClicked" />
+
+            <ImageButton
+                android:id="@+id/button_create_game"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:src="@drawable/bg_btn_create"
+                android:onClick="onCreateGameClicked" />
+
+            <ImageButton
+                android:id="@+id/button_join_game"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:src="@drawable/bg_btn_join"
+                android:onClick="onJoinGameClicked" />
+        </LinearLayout>
     </LinearLayout>
 
     <ImageButton

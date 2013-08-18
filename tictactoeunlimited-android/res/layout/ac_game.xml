@@ -11,6 +11,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
@@ -20,12 +21,11 @@
             android:contentDescription="@null"
             android:src="@drawable/pic_x" />
 
-        <ImageView
+        <com.github.fo2rist.tictactoeunlimited.controls.ImageTextView
             android:id="@+id/score_x"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:src="@drawable/numder_game_0" />
+            android:layout_margin="@dimen/letters_spacing" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -33,12 +33,11 @@
             android:contentDescription="@null"
             android:src="@drawable/numder_game_dash" />
 
-        <ImageView
+        <com.github.fo2rist.tictactoeunlimited.controls.ImageTextView
             android:id="@+id/score_o"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:src="@drawable/numder_game_0" />
+            android:layout_margin="@dimen/letters_spacing" />
 
         <ImageView
             android:layout_width="wrap_content"

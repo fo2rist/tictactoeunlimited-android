@@ -1,5 +1,7 @@
 package com.github.fo2rist.tictactoeunlimited;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.github.fo2rist.tictactoeunlimited.controls.ImageTextView;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic.CellState;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic.GameView;
@@ -18,14 +21,39 @@ import com.github.fo2rist.tictactoeunlimited.game.GameLogic.GameView;
  * Game field.
  */
 public class GameActivity extends Activity implements GameView, OnClickListener {
-
+	private static HashMap<Character, Integer> SCORES_CHAR_DRAWABLE_MAP = new HashMap<Character, Integer>();
+	static {
+		SCORES_CHAR_DRAWABLE_MAP.put('0', R.drawable.numder_game_0);
+		SCORES_CHAR_DRAWABLE_MAP.put('1', R.drawable.numder_game_1);
+		SCORES_CHAR_DRAWABLE_MAP.put('2', R.drawable.numder_game_2);
+		SCORES_CHAR_DRAWABLE_MAP.put('3', R.drawable.numder_game_3);
+		SCORES_CHAR_DRAWABLE_MAP.put('4', R.drawable.numder_game_4);
+		SCORES_CHAR_DRAWABLE_MAP.put('5', R.drawable.numder_game_5);
+		SCORES_CHAR_DRAWABLE_MAP.put('6', R.drawable.numder_game_6);
+		SCORES_CHAR_DRAWABLE_MAP.put('7', R.drawable.numder_game_7);
+		SCORES_CHAR_DRAWABLE_MAP.put('8', R.drawable.numder_game_8);
+		SCORES_CHAR_DRAWABLE_MAP.put('9', R.drawable.numder_game_9);
+	}
+	
+	//Controls
 	private GridLayout gameGrid_;
+	private ImageTextView scoreO;
+	private ImageTextView scoreX;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ac_game);
+		
 		gameGrid_ = (GridLayout) findViewById(R.id.game_grid);
+		scoreO = (ImageTextView) findViewById(R.id.score_o);
+		scoreX = (ImageTextView) findViewById(R.id.score_x);
+		
+		scoreO.setCharDrawableMap(SCORES_CHAR_DRAWABLE_MAP);
+		scoreX.setCharDrawableMap(SCORES_CHAR_DRAWABLE_MAP);
+		
+		scoreO.setText("0");
+		scoreX.setText("0");
 		
 		//Init game
 		GameLogic.getInstance().registerGameView(this);
@@ -76,12 +104,12 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 	//Game view implementation
 	@Override
 	public void numberOfWinsChanged(int numberOfWins) {
-		// TODO Auto-generated method stub
+		scoreX.setText(String.valueOf(numberOfWins));
 	}
 
 	@Override
 	public void numberOfDefeatsChanged(int numberOfDefeats) {
-		// TODO Auto-generated method stub
+		scoreO.setText(String.valueOf(numberOfDefeats));
 	}
 
 	@Override
