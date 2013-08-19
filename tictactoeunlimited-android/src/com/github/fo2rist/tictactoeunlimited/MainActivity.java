@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -116,8 +117,10 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.ac_main);
 
 		//Initialize game modes
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		modesAdapter_ = new ModesAdapter(getSupportFragmentManager());
-		mapSizesAdapter_ = new MapSizesAdapter(getSupportFragmentManager());
+		mapSizesAdapter_ = new MapSizesAdapter(getSupportFragmentManager(), dm);
 		btAdapter_ = BluetoothAdapter.getDefaultAdapter();
 		if (btAdapter_ == null) {
 			//Disable modes/buttons if necessary

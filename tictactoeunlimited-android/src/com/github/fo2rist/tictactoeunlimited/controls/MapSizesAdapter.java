@@ -5,7 +5,9 @@ import java.util.HashMap;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.DisplayMetrics;
 
+import com.github.fo2rist.tictactoeunlimited.GameActivity;
 import com.github.fo2rist.tictactoeunlimited.R;
 
 public class MapSizesAdapter extends FragmentPagerAdapter {
@@ -25,15 +27,31 @@ public class MapSizesAdapter extends FragmentPagerAdapter {
 		BIGTEXT_CHAR_DRAWABLE_MAP.put('x', R.drawable.numder_x);	
 	}
 	
-	private int[][] maps_ = {
-		{6, 6},
-		{8, 8},
-		{8, 10},
-		{8, 14}
-	};
+	private int[][] maps_;
 	
-	public MapSizesAdapter(FragmentManager fm) {
+	/**
+	 * Construct adapter for given display.
+	 * Adapter will calculate suitable map sizes. 
+	 */
+	public MapSizesAdapter(FragmentManager fm, DisplayMetrics displayMetrics) {
 		super(fm);
+		int minButtonSizeDp = 30;
+		int screenWidthDp = (int) (displayMetrics.widthPixels / displayMetrics.density);
+		int screenHeightDp = (int) (displayMetrics.heightPixels / displayMetrics.density);
+				
+		int maxGameWidth = (screenWidthDp - GameActivity.HORIZONTAL_SCREEN_PADDING_DP) / minButtonSizeDp;
+		int maxGameHeight = (screenHeightDp - GameActivity.VERTICAL_SCREEN_PADDING_DP) / minButtonSizeDp;
+		
+		final int MIN_GAME_SIZE = 6;
+		final int STEP = 2;
+		int possibleWidths = (maxGameWidth - MIN_GAME_SIZE) / STEP;
+		int possibleHeights = (maxGameHeight - MIN_GAME_SIZE) / STEP;
+		maps_ = new int[possibleWidths * possibleHeights][];
+		for (int w = 0; w < possibleWidths; w++) {
+			for (int h = 0; h < possibleHeights; h++) {
+				maps_[w * possibleHeights + h] = new int[]{MIN_GAME_SIZE + w * STEP, MIN_GAME_SIZE + h * STEP};
+			}
+		}
 	}
 
 	@Override
