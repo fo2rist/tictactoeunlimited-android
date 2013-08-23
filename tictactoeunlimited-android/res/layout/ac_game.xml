@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:background="#FFFFFF" >
 
+        <!-- game field -->
         <android.support.v7.widget.GridLayout
             android:id="@+id/game_grid"
             android:layout_width="wrap_content"
@@ -58,10 +59,26 @@
             android:layout_gravity="center"
             android:background="@drawable/bg_hole"
             android:gravity="center"
-            android:minHeight="100dp"
-            android:minWidth="100dp" >
+            android:minHeight="280dp"
+            android:minWidth="280dp" >
         </android.support.v7.widget.GridLayout>
 
+        <!-- game result -->
+        <ImageView
+            android:id="@+id/game_end_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_alignBottom="@+id/game_grid"
+            android:layout_alignLeft="@+id/game_grid"
+            android:layout_alignRight="@+id/game_grid"
+            android:layout_alignTop="@+id/game_grid"
+            android:contentDescription="@null"
+            android:background="#CAFF9D00"
+            android:onClick="onResetGameClick"
+            android:scaleType="centerInside"
+            android:src="@drawable/game_win_o" />
+        
+        <!-- boreder on top of views -->
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -70,7 +87,7 @@
             android:layout_alignRight="@+id/game_grid"
             android:layout_alignTop="@+id/game_grid"
             android:background="@drawable/bg_hole" />
-
+        
     </RelativeLayout>
 
 </LinearLayout>
