@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView.ScaleType;
-import android.widget.Toast;
 
 import com.github.fo2rist.tictactoeunlimited.controls.ImageTextView;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
@@ -45,6 +44,7 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 	private GridLayout gameGrid_;
 	private ImageTextView scoreO;
 	private ImageTextView scoreX;
+	private View gameEndView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,7 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 		gameGrid_ = (GridLayout) findViewById(R.id.game_grid);
 		scoreO = (ImageTextView) findViewById(R.id.score_o);
 		scoreX = (ImageTextView) findViewById(R.id.score_x);
+		gameEndView = findViewById(R.id.game_end_view);
 		
 		scoreO.setCharDrawableMap(SCORES_CHAR_DRAWABLE_MAP);
 		scoreX.setCharDrawableMap(SCORES_CHAR_DRAWABLE_MAP);
@@ -81,6 +82,9 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 	
 	private void fillGameView() {
 		GameLogic game = GameLogic.getInstance();
+		
+		gameEndView.setVisibility(View.INVISIBLE);
+		gameEndView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 		
 		gameGrid_.removeAllViews();
 		gameGrid_.setColumnCount(game.gameWidth);
@@ -117,6 +121,10 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 	public void onClick(View sender) {
 		Point tagPosition = (Point) sender.getTag();
 		GameLogic.getInstance().onButtonClicked(true, tagPosition);
+	}
+	
+	public void onResetGameClick(View sender) {
+		GameLogic.getInstance().resetGame();
 	}
 
 	//Game view implementation
@@ -160,7 +168,7 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 	
 	@Override
 	public void onShowDialog(String text) {
-		Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-		GameLogic.getInstance().resetGame();
+		gameEndView.setVisibility(View.VISIBLE);
+		gameEndView.setBackgroundColor(getResources().getColor(R.color.win));
 	}
 }

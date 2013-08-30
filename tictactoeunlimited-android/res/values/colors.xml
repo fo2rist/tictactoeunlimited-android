@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="win">#CAFF9D00</color>
+    <color name="lose">#CA00A8FF</color>
+    <color name="no_winner">#CA5C5C5C</color>
+</resources>
