@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayout;
@@ -18,6 +19,7 @@ import com.github.fo2rist.tictactoeunlimited.controls.ImageTextView;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic.CellState;
 import com.github.fo2rist.tictactoeunlimited.game.GameLogic.GameView;
+import com.github.fo2rist.tictactoeunlimited.game.GameLogic.TurnType;
 
 /**
  * Game field.
@@ -25,6 +27,9 @@ import com.github.fo2rist.tictactoeunlimited.game.GameLogic.GameView;
 public class GameActivity extends Activity implements GameView, OnClickListener {
 	public static int HORIZONTAL_SCREEN_PADDING_DP = 12;
 	public static int VERTICAL_SCREEN_PADDING_DP = 120;
+	
+	private static String GAME_SIZE_KEY = "game_size_key";
+	private static String GAME_MODE_KEY = "game_mode_key";
 	
 	private static HashMap<Character, Integer> SCORES_CHAR_DRAWABLE_MAP = new HashMap<Character, Integer>();
 	static {
@@ -42,16 +47,27 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 	
 	//Controls
 	private GridLayout gameGrid_;
+	private ImageButton iconX;
+	private ImageButton iconO;
 	private ImageTextView scoreO;
 	private ImageTextView scoreX;
 	private View gameEndView;
 
+	public static void launch(Context context, int width, int height, GameLogic.GameMode gameMode) {
+		Intent intent = new Intent(context, GameActivity.class);
+		intent.putExtra(GAME_SIZE_KEY, new Point(width, height));
+		intent.putExtra(GAME_MODE_KEY, gameMode);
+		context.startActivity(intent);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ac_game);
 		
 		gameGrid_ = (GridLayout) findViewById(R.id.game_grid);
+		iconX = (ImageButton) findViewById(R.id.icon_x);
+		iconO = (ImageButton) findViewById(R.id.icon_o);
 		scoreO = (ImageTextView) findViewById(R.id.score_o);
 		scoreX = (ImageTextView) findViewById(R.id.score_x);
 		gameEndView = findViewById(R.id.game_end_view);
@@ -59,11 +75,11 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 		scoreO.setCharDrawableMap(SCORES_CHAR_DRAWABLE_MAP);
 		scoreX.setCharDrawableMap(SCORES_CHAR_DRAWABLE_MAP);
 		
-		scoreO.setText("0");
-		scoreX.setText("0");
-		
 		//Init game
+		Point gameSize = (Point) getIntent().getParcelableExtra(GAME_SIZE_KEY);
+		GameLogic.GameMode playersMode = (GameLogic.GameMode) getIntent().getSerializableExtra(GAME_MODE_KEY);
 		GameLogic.getInstance().registerGameView(this);
+		GameLogic.getInstance().initializeGame(gameSize.x, gameSize.y, playersMode);
 		fillGameView();
 	}
 	
@@ -140,7 +156,13 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 	
 	@Override
 	public void onCurrentPlayerChanged(GameLogic.TurnType currentPlayer) {
-		// TODO Auto-generated method stub	
+		if (currentPlayer == TurnType.TurnX) {
+			iconX.setAlpha(255);
+			iconO.setAlpha(100);
+		} else {
+			iconX.setAlpha(100);
+			iconO.setAlpha(255);
+		}
 	}
 
 	@Override

@@ -15,10 +15,12 @@
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/icon_x"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
+            android:background="@null"
             android:src="@drawable/pic_x" />
 
         <com.github.fo2rist.tictactoeunlimited.controls.ImageTextView
@@ -39,10 +41,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/letters_spacing" />
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/icon_o"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
+            android:background="@null"
             android:src="@drawable/pic_o" />
     </LinearLayout>
     

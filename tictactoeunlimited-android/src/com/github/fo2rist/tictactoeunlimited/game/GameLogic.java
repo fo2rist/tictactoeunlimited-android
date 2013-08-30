@@ -110,6 +110,11 @@ public class GameLogic {
 		
 		//Init game field
 		initGameField();
+		
+		//Notify UI to redraw everything
+		emit_currentPlayerChanged();
+		emit_numberOfWinsChanged();
+		emit_numberOfDefeatsChanged();
 	}
 
 	public int getNumberOfWins() {
@@ -146,7 +151,7 @@ public class GameLogic {
 			}
 		} else {
 			//Wait for next player turn
-			emit_onCurrentPlayerChanged();
+			emit_currentPlayerChanged();
 		}
 	}
 
@@ -172,7 +177,7 @@ public class GameLogic {
 			}
 			break;
 		}
-		emit_onCurrentPlayerChanged();
+		emit_currentPlayerChanged();
 	}
 
 	///Set check-mark in given position.
@@ -448,7 +453,7 @@ public class GameLogic {
 		gameView_.onNumberOfDefeatsChanged(numberOfDefeats_);
 	}
 	
-	void emit_onCurrentPlayerChanged() {
+	void emit_currentPlayerChanged() {
 		if (gameView_ == null) {
 			return;
 		}

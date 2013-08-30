@@ -201,11 +201,9 @@ public class MainActivity extends FragmentActivity {
 		default:
 			throw new IllegalStateException("Unsupported game mode");
 		}
-		GameLogic.getInstance().initializeGame(mapSize[0], mapSize[1], playersMode);
-		//TODO setup mode
-		
+				
 		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-		startActivity(new Intent(this, GameActivity.class));
+		GameActivity.launch(this, mapSize[0], mapSize[1], playersMode);
 	}
 	
 	public void onCreateGameClicked(View sender) {
