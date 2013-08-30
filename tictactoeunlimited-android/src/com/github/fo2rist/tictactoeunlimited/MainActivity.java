@@ -188,7 +188,20 @@ public class MainActivity extends FragmentActivity {
 		GameMode gameMode = modesAdapter_.getMode(modeSelector.getCurrentItem());
 		int[] mapSize = mapSizesAdapter_.getMapSize(mapSizeSelector.getCurrentItem());
 		
-		GameLogic.getInstance().initializeGame(mapSize[0], mapSize[1]);
+		GameLogic.GameMode playersMode;
+		switch (gameMode) {
+		case VsCpu:
+			playersMode = GameLogic.GameMode.GameModeSinglePlayer;
+			break;
+		case VsFriend:
+		case ViaBluetooth:
+		case ViaNetwork:
+			playersMode = GameLogic.GameMode.GameModeTwoPlayers;
+			break;
+		default:
+			throw new IllegalStateException("Unsupported game mode");
+		}
+		GameLogic.getInstance().initializeGame(mapSize[0], mapSize[1], playersMode);
 		//TODO setup mode
 		
 		overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);

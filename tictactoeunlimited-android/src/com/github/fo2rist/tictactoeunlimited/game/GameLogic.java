@@ -48,8 +48,9 @@ public class GameLogic {
 	 * For those who wants to display game state.
 	 */
 	public interface GameView {
-		void numberOfWinsChanged(int numberOfWins);
-		void numberOfDefeatsChanged(int numberOfDefeats);
+		void onNumberOfWinsChanged(int numberOfWins);
+		void onNumberOfDefeatsChanged(int numberOfDefeats);
+		void onCurrentPlayerChanged(TurnType currentPlayer);
 		void onCellFilled(int x, int y, CellState state);
 		void onFieldErased();
 		void onShowDialog(String text);
@@ -61,44 +62,66 @@ public class GameLogic {
 	public enum CellState {
 		CellStateEmpty,
 		CellStateX,
-		CellStateO
+		CellStateO,
+		CellStateV // For third player
 	}
 
-	enum TurnType {
-		TurnX, //just make turn and state binary compatible
-		TurnO
+	public enum TurnType {
+		TurnX,
+		TurnO,
+		TurnV
 	};
-
+	
+	public enum GameMode {
+		GameModeSinglePlayer,
+		GameModeTwoPlayers,
+		GameModeThreePlayers
+	};
+	
+	//Properties
 	public int gameWidth;
 	public int gameHeight;
 
+	//Private fields
 	private CellState gameField_[][];
-	int gameNumber_;
-	int numberOfWins_;
-	int numberOfDefeats_;
+	private GameMode gameMode_;
+	private TurnType currentTurn_;
+	private int gameNumber_;
+	private int numberOfWins_;
+	private int numberOfDefeats_;
 
 	private GameLogic() {
 	}
 	
-	public void initializeGame(int width, int height) {
+	public void initializeGame(int width, int height, GameMode gameMode) {
 		//Clean old game
 		cleanGameField();
 
-		//Init game field
+		//Clear game state
+		currentTurn_ = TurnType.TurnX; //First player starts by default
+		gameNumber_ = 0;
+		numberOfWins_ = 0;
+		numberOfDefeats_ = 0;
+		
+		//Set new game parameters
 		gameWidth = width;
 		gameHeight = height;
+		gameMode_ = gameMode;
+		
+		//Init game field
 		initGameField();
 	}
 
+	public int getNumberOfWins() {
+		return numberOfWins_;
+	}
+
+	public int getNumberOfDefeats() {
+		return numberOfDefeats_;
+	}
+	
 	public void onButtonClicked(boolean checked, Point position) {
-		if (checked == false) { //Ignore game reset
-			return;
-		}
-
-//		ImageToggleButton* clickedButton = qobject_cast<ImageToggleButton*>(QObject::sender());
-//		Point position = clickedButton->property(POSITION_PROPERTY).toPoint();
-
-		makeTurn(position, TurnType.TurnX);
+		makeTurn(position);
 
 		//Check for palyer's win
 		if (checkForWin(position)) {
@@ -112,46 +135,49 @@ public class GameLogic {
 			showGameOverDialog("asset:///images/dialog_no_turns.png");
 			return;
 		}
-		makeTurn(computersTurnPosition, TurnType.TurnO);
 
-		//Check for computer's win
-		if(checkForWin(computersTurnPosition)) {
-			return;
+		//If we play vs CPU make this turn
+		if (gameMode_ == GameMode.GameModeSinglePlayer) {
+			makeTurn(computersTurnPosition);
+
+			//Check for computer's win
+			if(checkForWin(computersTurnPosition)) {
+				return;
+			}
+		} else {
+			//Wait for next player turn
+			emit_onCurrentPlayerChanged();
 		}
 	}
 
 	public void resetGame() {
 		cleanGameField();
 		initGameField();
-//		QList<ImageToggleButton*> buttons = currentGameFieldContainer_->findChildren<ImageToggleButton*>(BUTTONS_NAME);
-//		foreach(ImageToggleButton *button, buttons) {
-//			button->setEnabled(true);
-//			button->setChecked(false);
-//		}
+
 		emit_onFieldErased();
 
 		//increase game number to switch first player
 		gameNumber_++;
-		//Make AI's turn every second time
-		if (gameNumber_ % 2 == 1) {
-			Point computersTurnPosition = bestTurnFor(TurnType.TurnO);
-			makeTurn(computersTurnPosition, TurnType.TurnO);
+		//Switch first player every second time
+		switch (gameNumber_ % 2) {
+		case 0:
+			currentTurn_ = TurnType.TurnX;
+			break;
+		case 1:
+			currentTurn_ = TurnType.TurnO;
+			//Make AI's turn automatically
+			if (gameMode_ == GameMode.GameModeSinglePlayer) {
+				Point computersTurnPosition = bestTurnFor(currentTurn_);
+				makeTurn(computersTurnPosition);
+			}
+			break;
 		}
-
+		emit_onCurrentPlayerChanged();
 	}
-
-	public int getNumberOfWins() {
-		return numberOfWins_;
-	}
-
-	public int getNumberOfDefeats() {
-		return numberOfDefeats_;
-	}
-
 
 	///Set check-mark in given position.
-	private void makeTurn(Point position, TurnType turn) {
-		switch (turn) {
+	private void makeTurn(Point position) {
+		switch (currentTurn_) {
 			case TurnX:
 				gameField_[position.x][position.y] = CellState.CellStateX;
 				emit_onCellFilled(position.x, position.y, CellState.CellStateX);
@@ -160,8 +186,33 @@ public class GameLogic {
 				gameField_[position.x][position.y] = CellState.CellStateO;
 				emit_onCellFilled(position.x, position.y, CellState.CellStateO);
 				break;
+			case TurnV:
+				gameField_[position.x][position.y] = CellState.CellStateV;
+				emit_onCellFilled(position.x, position.y, CellState.CellStateV);
+				break;
+		}
+		//Figure out who is the next
+		switch (gameMode_) {
+			case GameModeSinglePlayer:
+			case GameModeTwoPlayers:
+				if (currentTurn_ == TurnType.TurnX) {
+					currentTurn_ = TurnType.TurnO;
+				} else {
+					currentTurn_ = TurnType.TurnX;
+				}
+				break;
+			case GameModeThreePlayers:
+				if (currentTurn_ == TurnType.TurnX) {
+					currentTurn_ = TurnType.TurnO;
+				} else if (currentTurn_ == TurnType.TurnO) {
+					currentTurn_ = TurnType.TurnV;
+				} else {
+					currentTurn_ = TurnType.TurnX;
+				}
+				break;
 		}
 	}
+	
 	///Check whether current step is the last.
 	///@return true if it's a last step.
 	private boolean checkForWin(Point position) {
@@ -202,6 +253,10 @@ public class GameLogic {
 				desiredState = CellState.CellStateO;
 				enemysState = CellState.CellStateX;
 				break;
+			case TurnV:
+				//not implemented
+				desiredState = CellState.CellStateV;
+				return impossiblePoint;
 		}
 
 		//Go through matrix an look for best point
@@ -361,10 +416,6 @@ public class GameLogic {
 	
 	private void cleanGameField() {
 		if (gameField_ != null) {
-			//for (int x = 0; x < gameWidth_; ++x) {
-			//	delete[] gameField_[x];
-			//}
-			//delete[] gameField_;
 			gameField_ = null;
 		}
 	}
@@ -387,14 +438,21 @@ public class GameLogic {
 		if (gameView_ == null) {
 			return;
 		}
-		gameView_.numberOfWinsChanged(numberOfWins_);
+		gameView_.onNumberOfWinsChanged(numberOfWins_);
 	}
 	
 	void emit_numberOfDefeatsChanged() {
 		if (gameView_ == null) {
 			return;
 		}
-		gameView_.numberOfDefeatsChanged(numberOfDefeats_);
+		gameView_.onNumberOfDefeatsChanged(numberOfDefeats_);
+	}
+	
+	void emit_onCurrentPlayerChanged() {
+		if (gameView_ == null) {
+			return;
+		}
+		gameView_.onCurrentPlayerChanged(currentTurn_);
 	}
 	
 	void emit_onCellFilled(int x, int y, CellState state) {

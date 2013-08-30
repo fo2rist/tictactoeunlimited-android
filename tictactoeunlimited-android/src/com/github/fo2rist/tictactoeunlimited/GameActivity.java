@@ -121,13 +121,18 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 
 	//Game view implementation
 	@Override
-	public void numberOfWinsChanged(int numberOfWins) {
+	public void onNumberOfWinsChanged(int numberOfWins) {
 		scoreX.setText(String.valueOf(numberOfWins));
 	}
 
 	@Override
-	public void numberOfDefeatsChanged(int numberOfDefeats) {
+	public void onNumberOfDefeatsChanged(int numberOfDefeats) {
 		scoreO.setText(String.valueOf(numberOfDefeats));
+	}
+	
+	@Override
+	public void onCurrentPlayerChanged(GameLogic.TurnType currentPlayer) {
+		// TODO Auto-generated method stub	
 	}
 
 	@Override
