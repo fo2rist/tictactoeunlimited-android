@@ -13,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.github.fo2rist.tictactoeunlimited.controls.ImageTextView;
@@ -51,7 +52,7 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 	private ImageButton iconO;
 	private ImageTextView scoreO;
 	private ImageTextView scoreX;
-	private View gameEndView;
+	private ImageView gameOverView;
 
 	public static void launch(Context context, int width, int height, GameLogic.GameMode gameMode) {
 		Intent intent = new Intent(context, GameActivity.class);
@@ -70,7 +71,7 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 		iconO = (ImageButton) findViewById(R.id.icon_o);
 		scoreO = (ImageTextView) findViewById(R.id.score_o);
 		scoreX = (ImageTextView) findViewById(R.id.score_x);
-		gameEndView = findViewById(R.id.game_end_view);
+		gameOverView = (ImageView) findViewById(R.id.game_over_view);
 		
 		scoreO.setCharDrawableMap(SCORES_CHAR_DRAWABLE_MAP);
 		scoreX.setCharDrawableMap(SCORES_CHAR_DRAWABLE_MAP);
@@ -99,8 +100,8 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 	private void fillGameView() {
 		GameLogic game = GameLogic.getInstance();
 		
-		gameEndView.setVisibility(View.INVISIBLE);
-		gameEndView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+		gameOverView.setVisibility(View.GONE);
+		gameOverView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 		
 		gameGrid_.removeAllViews();
 		gameGrid_.setColumnCount(game.gameWidth);
@@ -189,8 +190,23 @@ public class GameActivity extends Activity implements GameView, OnClickListener 
 	}
 	
 	@Override
-	public void onShowDialog(String text) {
-		gameEndView.setVisibility(View.VISIBLE);
-		gameEndView.setBackgroundColor(getResources().getColor(R.color.win));
+	public void onGameOver(CellState winnersCell) {
+		switch (winnersCell) {
+		case CellStateEmpty:
+			gameOverView.setBackgroundColor(getResources().getColor(R.color.no_winner));
+			gameOverView.setImageResource(R.drawable.game_win_no);
+			break;
+		case CellStateX:
+			gameOverView.setBackgroundColor(getResources().getColor(R.color.win));
+			gameOverView.setImageResource(R.drawable.game_win_x);
+			break;
+		case CellStateO:
+			gameOverView.setBackgroundColor(getResources().getColor(R.color.lose));
+			gameOverView.setImageResource(R.drawable.game_win_o);
+			break;
+		default:
+			throw new IllegalArgumentException("Not supported winner");
+		}
+		gameOverView.setVisibility(View.VISIBLE);
 	}
 }

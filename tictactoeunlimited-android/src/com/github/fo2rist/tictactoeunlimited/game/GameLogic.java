@@ -53,7 +53,7 @@ public class GameLogic {
 		void onCurrentPlayerChanged(TurnType currentPlayer);
 		void onCellFilled(int x, int y, CellState state);
 		void onFieldErased();
-		void onShowDialog(String text);
+		void onGameOver(CellState winnersCell);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class GameLogic {
 		Point computersTurnPosition = bestTurnFor(TurnType.TurnO);
 		//Go ahead
 		if (computersTurnPosition.equals(impossiblePoint)) {
-			showGameOverDialog("asset:///images/dialog_no_turns.png");
+			showGameOverDialog(CellState.CellStateEmpty);
 			return;
 		}
 
@@ -227,18 +227,15 @@ public class GameLogic {
 				|| getLineLength(position, directionNW) + getLineLength(position, directionSE) > WIN_LINE_LENGTH) {
 
 			CellState cellState = gameField_[position.x][position.y];
-			String background;
 			if (cellState == CellState.CellStateX) {
-				background= "asset:///images/dialog_win.png";
 				numberOfWins_++;
 				emit_numberOfWinsChanged();
+				showGameOverDialog(cellState);
 			} else {
-				background = "asset:///images/dialog_lose.png";
 				numberOfDefeats_++;
 				emit_numberOfDefeatsChanged();
+				showGameOverDialog(cellState);
 			}
-
-			showGameOverDialog(background);
 			return true;
 		}
 		return false;
@@ -425,11 +422,11 @@ public class GameLogic {
 		}
 	}
 
-	private void showGameOverDialog(String background) {
+	private void showGameOverDialog(CellState winnersCell) {
 		if (gameView_ == null) {
 			return;
 		}
-		gameView_.onShowDialog(background);
+		gameView_.onGameOver(winnersCell);
 	}
 
 	/**

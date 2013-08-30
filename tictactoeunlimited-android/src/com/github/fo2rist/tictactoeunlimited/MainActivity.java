@@ -159,6 +159,8 @@ public class MainActivity extends FragmentActivity {
 		
 		/*DEBUG*/
 		out = (TextView) findViewById(R.id.out);
+		out.setVisibility(View.GONE);
+		findViewById(R.id.bt_send_button).setVisibility(View.GONE);
 	}
 	
 	@Override

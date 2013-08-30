@@ -63,13 +63,13 @@
             android:layout_gravity="center"
             android:background="@drawable/bg_hole"
             android:gravity="center"
-            android:minHeight="280dp"
-            android:minWidth="280dp" >
+            android:minHeight="180dp"
+            android:minWidth="180dp" >
         </android.support.v7.widget.GridLayout>
 
         <!-- game result -->
         <ImageView
-            android:id="@+id/game_end_view"
+            android:id="@+id/game_over_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_alignBottom="@+id/game_grid"
