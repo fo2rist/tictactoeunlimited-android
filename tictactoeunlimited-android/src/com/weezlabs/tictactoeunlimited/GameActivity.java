@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited;
+package com.weezlabs.tictactoeunlimited;
 
 import java.util.HashMap;
 
@@ -16,11 +16,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.github.fo2rist.tictactoeunlimited.controls.ImageTextView;
-import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
-import com.github.fo2rist.tictactoeunlimited.game.GameLogic.CellState;
-import com.github.fo2rist.tictactoeunlimited.game.GameLogic.GameView;
-import com.github.fo2rist.tictactoeunlimited.game.GameLogic.TurnType;
+import com.weezlabs.tictactoeunlimited.controls.ImageTextView;
+import com.weezlabs.tictactoeunlimited.game.GameLogic;
+import com.weezlabs.tictactoeunlimited.game.GameLogic.CellState;
+import com.weezlabs.tictactoeunlimited.game.GameLogic.GameView;
+import com.weezlabs.tictactoeunlimited.game.GameLogic.TurnType;
 
 /**
  * Game field.

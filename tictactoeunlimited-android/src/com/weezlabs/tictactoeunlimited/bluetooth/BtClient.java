@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited.bluetooth;
+package com.weezlabs.tictactoeunlimited.bluetooth;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils.BtEventsListener;
+import com.weezlabs.tictactoeunlimited.bluetooth.BtUtils.BtEventsListener;
 
 /**
  * Client connection.

@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited.controls;
+package com.weezlabs.tictactoeunlimited.controls;
 
 import java.util.HashMap;
 
@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.DisplayMetrics;
 
-import com.github.fo2rist.tictactoeunlimited.GameActivity;
-import com.github.fo2rist.tictactoeunlimited.R;
+import com.weezlabs.tictactoeunlimited.GameActivity;
+import com.weezlabs.tictactoeunlimited.R;
 
 public class MapSizesAdapter extends FragmentPagerAdapter {
 

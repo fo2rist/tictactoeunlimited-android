@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited;
+package com.weezlabs.tictactoeunlimited;
 
 import android.app.Activity;
 import android.os.Bundle;

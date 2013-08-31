@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited.controls;
+package com.weezlabs.tictactoeunlimited.controls;
 
 import java.util.HashMap;
 
@@ -8,8 +8,7 @@ import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.github.fo2rist.tictactoeunlimited.R;
-
+import com.weezlabs.tictactoeunlimited.R;
 /**
  * View that display bunch of images in single line to draw words and numbers. 
  */

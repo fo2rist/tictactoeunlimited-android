@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited.controls;
+package com.weezlabs.tictactoeunlimited.controls;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;

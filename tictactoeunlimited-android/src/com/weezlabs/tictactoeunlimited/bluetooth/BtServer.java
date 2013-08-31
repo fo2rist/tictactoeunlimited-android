@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited.bluetooth;
+package com.weezlabs.tictactoeunlimited.bluetooth;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
-import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils.BtEventsListener;
+import com.weezlabs.tictactoeunlimited.bluetooth.BtUtils.BtEventsListener;
 
 public class BtServer extends Thread {
 

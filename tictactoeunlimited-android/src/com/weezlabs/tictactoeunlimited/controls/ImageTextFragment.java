@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited.controls;
+package com.weezlabs.tictactoeunlimited.controls;
 
 import java.util.HashMap;
 

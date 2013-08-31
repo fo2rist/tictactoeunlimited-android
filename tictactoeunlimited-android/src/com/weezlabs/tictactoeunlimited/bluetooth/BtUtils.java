@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited.bluetooth;
+package com.weezlabs.tictactoeunlimited.bluetooth;
 
 import java.util.Set;
 import java.util.UUID;

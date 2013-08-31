@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited.controls;
+package com.weezlabs.tictactoeunlimited.controls;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.github.fo2rist.tictactoeunlimited.R;
+import com.weezlabs.tictactoeunlimited.R;
 
 public class ModesAdapter extends FragmentPagerAdapter {
 

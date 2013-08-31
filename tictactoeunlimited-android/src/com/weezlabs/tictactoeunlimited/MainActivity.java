@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited;
+package com.weezlabs.tictactoeunlimited;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -10,17 +10,17 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.fo2rist.tictactoeunlimited.bluetooth.BtClient;
-import com.github.fo2rist.tictactoeunlimited.bluetooth.BtServer;
-import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils;
-import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils.BtEventsListener;
-import com.github.fo2rist.tictactoeunlimited.bluetooth.BtUtils.OnDeviceSelectesListener;
-import com.github.fo2rist.tictactoeunlimited.controls.HorizontalPagerWidget;
-import com.github.fo2rist.tictactoeunlimited.controls.HorizontalPagerWidget.OnPageSelectedListener;
-import com.github.fo2rist.tictactoeunlimited.controls.MapSizesAdapter;
-import com.github.fo2rist.tictactoeunlimited.controls.ModesAdapter;
-import com.github.fo2rist.tictactoeunlimited.controls.ModesAdapter.GameMode;
-import com.github.fo2rist.tictactoeunlimited.game.GameLogic;
+import com.weezlabs.tictactoeunlimited.bluetooth.BtClient;
+import com.weezlabs.tictactoeunlimited.bluetooth.BtServer;
+import com.weezlabs.tictactoeunlimited.bluetooth.BtUtils;
+import com.weezlabs.tictactoeunlimited.bluetooth.BtUtils.BtEventsListener;
+import com.weezlabs.tictactoeunlimited.bluetooth.BtUtils.OnDeviceSelectesListener;
+import com.weezlabs.tictactoeunlimited.controls.HorizontalPagerWidget;
+import com.weezlabs.tictactoeunlimited.controls.HorizontalPagerWidget.OnPageSelectedListener;
+import com.weezlabs.tictactoeunlimited.controls.MapSizesAdapter;
+import com.weezlabs.tictactoeunlimited.controls.ModesAdapter;
+import com.weezlabs.tictactoeunlimited.controls.ModesAdapter.GameMode;
+import com.weezlabs.tictactoeunlimited.game.GameLogic;
 
 /**
  * Main screen.

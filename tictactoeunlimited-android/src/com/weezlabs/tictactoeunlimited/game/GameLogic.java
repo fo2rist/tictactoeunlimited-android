@@ -1,4 +1,4 @@
-package com.github.fo2rist.tictactoeunlimited.game;
+package com.weezlabs.tictactoeunlimited.game;
 
 import android.graphics.Point;
 

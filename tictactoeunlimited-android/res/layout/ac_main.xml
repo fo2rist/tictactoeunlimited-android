@@ -56,7 +56,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="88dp" >
-                    <com.github.fo2rist.tictactoeunlimited.controls.HorizontalPagerWidget
+                    <com.weezlabs.tictactoeunlimited.controls.HorizontalPagerWidget
                         android:id="@+id/mode_selector"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -91,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="88dp"
                     android:layout_marginTop="@dimen/activity_vertical_margin" >
-                    <com.github.fo2rist.tictactoeunlimited.controls.HorizontalPagerWidget
+                    <com.weezlabs.tictactoeunlimited.controls.HorizontalPagerWidget
                         android:id="@+id/map_size_selector"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
