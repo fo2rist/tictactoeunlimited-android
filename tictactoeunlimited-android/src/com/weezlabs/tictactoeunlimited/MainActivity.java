@@ -159,8 +159,8 @@ public class MainActivity extends FragmentActivity {
 		
 		/*DEBUG*/
 		out = (TextView) findViewById(R.id.out);
-		out.setVisibility(View.GONE);
-		findViewById(R.id.bt_send_button).setVisibility(View.GONE);
+//		out.setVisibility(View.GONE);
+//		findViewById(R.id.bt_send_button).setVisibility(View.GONE);
 	}
 	
 	@Override
@@ -198,8 +198,11 @@ public class MainActivity extends FragmentActivity {
 		case VsFriend:
 		case ViaBluetooth:
 		case ViaNetwork:
-			playersMode = GameLogic.GameMode.GameModeTwoPlayers;
-			break;
+			/*DEBUG*/
+			startActivity(new Intent(this, PurchasesActivity.class));
+			return;
+			/*playersMode = GameLogic.GameMode.GameModeTwoPlayers;
+			break;*/
 		default:
 			throw new IllegalStateException("Unsupported game mode");
 		}
@@ -219,13 +222,21 @@ public class MainActivity extends FragmentActivity {
 		//TODO use mode
 		checkBtAndStartGame(BluetoothMode.Client);
 	}
+
+	public void onAchievementsClicked(View sender) {
+		startActivity(new Intent(this, AchievementsActivity.class));
+	}
+
+	public void onLeaderboardClicked(View sender) {
+		startActivity(new Intent(this, LeaderboardActivity.class));
+	}
+	
+	public void onShowAboutClicked(View sender) {
+		startActivity(new Intent(this, AboutActivity.class));
+	}
 	
 	public void onSendAnotherClicked(View sender)  {
 		btClient_.send("Hello from Android");
-	}
-
-	public void onShowAboutClicked(View sender) {
-		startActivity(new Intent(this, AboutActivity.class));
 	}
 
 	private void setupMode(GameMode gameMode) {

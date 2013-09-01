@@ -41,7 +41,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:weightSum="17" >
 
             <View
                 android:layout_width="0dp"
@@ -159,6 +160,32 @@
         </LinearLayout>
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/button_achievements"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:background="@null"
+        android:src="@drawable/games_controller_green"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:onClick="onAchievementsClicked" />
+    <ImageButton
+        android:id="@+id/button_leaderboard"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/button_achievements"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:background="@null"
+        android:src="@drawable/games_leaderboards_green"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:onClick="onLeaderboardClicked" />
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
